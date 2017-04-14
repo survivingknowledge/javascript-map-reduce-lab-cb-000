@@ -9000,3 +9000,60 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+const issuesWithUpdatedApiUrl = issues.map(function(obj){
+  return Object.assign({}, obj, {
+    url: obj.url.replace(/api.github.com/i, "api-v2.github.com")
+  });
+});
+
+const commentCountAcrossIssues = issues.map(function(obj){
+  return obj.comments_count
+}).reduce(function(acc, val){
+  return acc + val;
+});
+
+
+//map return undefined for things not matching, filter is what we are looking for
+const openIssues = issues.filter(function(obj){
+  if(obj.state === "open"){
+    return Object.assign({}, obj);
+  }
+});
+
+const nonAutomaticIssues = issues.filter(function(obj){
+  if(!obj.body.match(/learn.co/i)){
+    return Object.assign({}, obj)
+  }
+});
+
+// nonAutomaticIssues.map(function(obj){
+//   const tb = document.querySelector('table')
+//   let tr = document.createElement('tr')
+//   let body = document.createElement('td')
+//     body.innerHTML = obj.body
+//   let date = document.createElement('td')
+//     date.innerHTML = obj.created_at
+//   let state = document.createElement('td')
+//     state.innerHTML = obj.state
+//
+//   //add all 3 tds to tr
+//   tr.append(body);
+//   tr.append(date);
+//   tr.append(state);
+//
+//   tb.append(tr)
+// });
+
+
+//this is much cleaner as you are not constantly appending to DOM as you only do it once
+//
+const $tbody = document.getElementById('results');
+$tbody.innerHTML = nonAutomaticIssues.map(issue => {
+  return `<tr>
+        <td>${issue.body}</td>
+        <td>${issue.created_at}</td>
+        <td>${issue.state}</td>
+        </tr>
+  `
+}).join('');
